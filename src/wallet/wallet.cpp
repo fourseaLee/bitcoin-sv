@@ -116,7 +116,17 @@ public:
             Process(script);
         }
     }
+#ifdef ENABLE_VID
+    void operator()(const WitnessV0KeyHash  &keyId) {
+    }
 
+    void operator()(const WitnessV0ScriptHash &scriptId) {
+    }
+ 
+    void operator()(const WitnessUnknown  &scriptId) {
+    }
+
+#endif
     void operator()(const CNoDestination &none) {}
 };
 

@@ -61,5 +61,8 @@ enum HelpMessageMode { HMM_BITCOIND };
 std::string HelpMessage(HelpMessageMode mode);
 /** Returns licensing information (for -version) */
 std::string LicenseInfo();
+#ifdef ENABLE_VID 
+extern bool fMasterNode;
+#endif
 
 #endif // BITCOIN_INIT_H

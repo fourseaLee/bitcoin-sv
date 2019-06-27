@@ -7,6 +7,7 @@
 #include "hash.h"
 #include "script/script.h"
 #include "uint256.h"
+#include "script/standard.h"
 
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
@@ -229,6 +230,22 @@ public:
         data.insert(data.end(), id.begin(), id.end());
         return EncodeBase58Check(data);
     }
+#ifdef ENABLE_VID
+    std::string operator()(const WitnessV0ScriptHash &id) const {
+        return "EncodeBase58Check(data)";
+    }
+
+    std::string operator()(const  WitnessV0KeyHash &id) const {
+        return "EncodeBase58Check(data)";
+    }
+
+    std::string operator()(const  WitnessUnknown &id) const {
+        return "EncodeBase58Check(data)";
+    }
+
+
+#endif
+
 
     std::string operator()(const CNoDestination &no) const { return ""; }
 };
@@ -237,6 +254,7 @@ CTxDestination DecodeDestination(const std::string &str,
                                  const CChainParams &params) {
     std::vector<uint8_t> data;
     uint160 hash;
+    uint256 hash256;
     if (!DecodeBase58Check(str, data)) {
         return CNoDestination();
     }
@@ -249,12 +267,37 @@ CTxDestination DecodeDestination(const std::string &str,
         return CKeyID(hash);
     }
     const std::vector<uint8_t> &script_prefix =
-        params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+        params.Base58Prefix(CChainParams::EXT_PUBLIC_KEY);
     if (data.size() == 20 + script_prefix.size() &&
         std::equal(script_prefix.begin(), script_prefix.end(), data.begin())) {
         memcpy(hash.begin(), &data[script_prefix.size()], 20);
         return CScriptID(hash);
     }
+#ifdef ENABLE_VID
+    const std::vector<uint8_t> &witness_prefix =
+        params.Base58Prefix(CChainParams::EXT_SECRET_KEY);
+    if (data.size() == 20 + witness_prefix.size() &&
+        std::equal(pubkey_prefix.begin(), pubkey_prefix.end(), data.begin())) {
+        memcpy(hash.begin(), &data[pubkey_prefix.size()], 32);
+        return WitnessV0KeyHash(hash);
+    }
+    const std::vector<uint8_t> &witnessp2sh_prefix =
+        params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+    if (data.size() == 32 + witnessp2sh_prefix.size() &&
+        std::equal(script_prefix.begin(), script_prefix.end(), data.begin())) {
+        memcpy(hash256.begin(), &data[script_prefix.size()], 32);
+        return WitnessV0ScriptHash(hash256);
+    }
+
+    const std::vector<uint8_t> &witness_unkown_prefix =
+        params.Base58Prefix(CChainParams::SCRIPT_ADDRESS);
+    if (data.size() == 20 + witness_unkown_prefix.size() &&
+        std::equal(script_prefix.begin(), script_prefix.end(), data.begin())) {
+        memcpy(hash.begin(), &data[script_prefix.size()], 20);
+        return WitnessUnknown();
+    }
+#endif
+   
     return CNoDestination();
 }
 } // namespace

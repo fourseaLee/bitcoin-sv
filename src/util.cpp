@@ -644,3 +644,18 @@ std::string CopyrightHolders(const std::string &strPrefix) {
 int64_t GetStartupTime() {
     return nStartupTime;
 }
+
+#ifdef ENABLE_VID
+bool TryCreateDirectory(const boost::filesystem::path& p)
+{
+    try {
+        return boost::filesystem::create_directory(p);
+    } catch (const boost::filesystem::filesystem_error&) {
+        if (!boost::filesystem::exists(p) || !boost::filesystem::is_directory(p))
+            throw;
+    }
+
+    // create_directory didn't create the directory, it had to have existed already
+    return false;
+}
+#endif

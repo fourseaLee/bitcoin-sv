@@ -98,6 +98,10 @@ enum BindFlags {
 };
 
 static const char *FEE_ESTIMATES_FILENAME = "fee_estimates.dat";
+#ifdef ENABLE_VID
+    bool fMasterNode = false;
+#endif
+
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -1677,6 +1681,9 @@ bool AppInitParameterInteraction(Config &config) {
 
 #ifdef ENABLE_WALLET
     if (!CWallet::ParameterInteraction()) return false;
+#endif
+#ifdef ENABLE_VID
+    fMasterNode = gArgs.GetBoolArg("-masternode", false);
 #endif
 
     fIsBareMultisigStd =

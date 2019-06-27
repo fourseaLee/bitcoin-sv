@@ -130,5 +130,9 @@ set(ENABLE_WALLET ${BUILD_BITCOIN_WALLET})
 # Activate ZeroMQ
 set(ENABLE_ZMQ ${BUILD_BITCOIN_ZMQ})
 
+# Activate Vid
+set(ENABLE_VID ${BUILD_BITCOIN_VID})
+
+
 # Generate the config
 configure_file(bitcoin-config.h.cmake.in bitcoin-config.h ESCAPE_QUOTES)

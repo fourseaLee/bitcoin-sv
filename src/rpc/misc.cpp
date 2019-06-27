@@ -149,6 +149,20 @@ public:
 
     DescribeAddressVisitor(CWallet *_pwallet) : pwallet(_pwallet) {}
 
+#ifdef ENABLE_VID 
+    UniValue operator()(const WitnessV0KeyHash &dest) const {
+        return UniValue(UniValue::VOBJ);
+    }
+
+    UniValue operator()(const WitnessV0ScriptHash &dest) const {
+        return UniValue(UniValue::VOBJ);
+    }
+
+    UniValue operator()(const WitnessUnknown &dest) const {
+        return UniValue(UniValue::VOBJ);
+    }
+#endif
+
     UniValue operator()(const CNoDestination &dest) const {
         return UniValue(UniValue::VOBJ);
     }

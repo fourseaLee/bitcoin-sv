@@ -139,6 +139,9 @@ public:
         READWRITE(amount);
     }
 };
+#ifndef ENABLE_VID
+    typedef int64_t CAmount;
+#endif
 
 static const Amount COIN(100000000);
 static const Amount CENT(1000000);

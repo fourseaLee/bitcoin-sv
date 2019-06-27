@@ -3053,6 +3053,18 @@ uint64_t CConnman::CalculateKeyedNetGroup(const CAddress &ad) const {
         .Write(&vchNetGroup[0], vchNetGroup.size())
         .Finalize();
 }
+#ifdef ENABLE_VID
+void CConnman::RelayInv(CInv& inv, const int minProtoVersion /*= MIN_PEER_PROTO_VERSION*/)
+{
+    LOCK(cs_vNodes);
+    for (/*CNode**/ auto pnode : vNodes)
+        if (pnode->nVersion >= minProtoVersion)
+            pnode->PushInventory(inv);
+
+}
+
+#endif
+
 
 /**
  * This function convert MaxBlockSize from byte to

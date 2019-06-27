@@ -253,6 +253,8 @@ extern const char *GETBLOCKTXN;
  */
 extern const char *BLOCKTXN;
 
+
+
 /**
  * Indicate if the message is used to transmit the content of a block.
  * These messages can be significantly larger than usual messages and therefore
@@ -354,6 +356,18 @@ enum GetDataMsg {
     MSG_FILTERED_BLOCK = 3,
     //!< Defined in BIP152
     MSG_CMPCT_BLOCK = 4,
+#ifdef ENABLE_VID
+    MSG_TXLOCK_VOTE,
+    MSG_MASTERNODE_PAYMENT_VOTE,
+    MSG_MASTERNODE_PAYMENT_BLOCK,
+    MSG_MASTERNODE_ANNOUNCE,
+    MSG_MASTERNODE_PING,
+    MSG_DSTX,
+    MSG_GOVERNANCE_OBJECT,
+    MSG_GOVERNANCE_OBJECT_VOTE,
+    MSG_MASTERNODE_VERIFY
+#endif
+
 };
 
 /** inv message data */

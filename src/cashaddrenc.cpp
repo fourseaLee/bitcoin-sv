@@ -77,7 +77,28 @@ public:
         std::vector<uint8_t> data = PackAddrData(id, SCRIPT_TYPE);
         return cashaddr::Encode(params.CashAddrPrefix(), data);
     }
+#ifdef ENABLE_VID    
+    std::string operator()(const WitnessV0KeyHash &id) const {
+        /*std::vector<uint8_t> data = PackAddrData(id, PUBKEY_TYPE);
+        return cashaddr::Encode(params.CashAddrPrefix(), data);*/
+        return "WitnessV0KeyHash";
+    }
 
+    std::string operator()(const WitnessV0ScriptHash &id) const {
+        /*std::vector<uint8_t> data = PackAddrData(id, SCRIPT_TYPE);
+        return cashaddr::Encode(params.CashAddrPrefix(), data);*/
+
+        return "WitnessV0ScriptHash";
+    }
+
+     std::string operator()(const WitnessUnknown &id) const {
+        /*std::vector<uint8_t> data = PackAddrData(id, SCRIPT_TYPE);
+        return cashaddr::Encode(params.CashAddrPrefix(), data);*/
+
+        return "WitnessUnknown";
+    }
+
+#endif
     std::string operator()(const CNoDestination &) const { return ""; }
 
 private:

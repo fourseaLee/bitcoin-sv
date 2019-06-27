@@ -221,4 +221,8 @@ template <typename Callable> void TraceThread(const char *name, Callable func) {
 
 std::string CopyrightHolders(const std::string &strPrefix);
 
+#ifdef ENABLE_VID
+    bool TryCreateDirectory(const boost::filesystem::path& p);
+#endif
+
 #endif // BITCOIN_UTIL_H

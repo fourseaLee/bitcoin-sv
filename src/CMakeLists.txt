@@ -14,6 +14,7 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 option(ENABLE_PROD_BUILD "Enable production build" OFF)
 option(BUILD_BITCOIN_WALLET "Activate the wallet functionality" ON)
 option(BUILD_BITCOIN_ZMQ "Activate the ZeroMQ functionalities" ON)
+option(BUILD_BITCOIN_VID "Activate the vid functionalities" ON)
 
 if (NOT MSVC)
   #bitcoin seeder can not be build with MSVC
@@ -253,7 +254,6 @@ add_library(server
 	validationinterface.cpp
 	versionbits.cpp
 )
-
 # This require libevent
 find_package(Event REQUIRED)
 
@@ -297,6 +297,17 @@ if(BUILD_BITCOIN_ZMQ)
 	add_subdirectory(zmq)
 	target_link_libraries(server zmq)
 endif()
+
+file(GLOB VID_SRC  vid/*.cpp  vid/*.h)
+
+add_library(vid ${VID_SRC})
+target_include_directories(vid
+                        PRIVATE
+                        leveldb/helpers/memenv
+                        ${EVENT_INCLUDE_DIR}
+                        )
+
+target_link_libraries(vid server)
 
 # RPC client support
 add_library(rpcclient rpc/client.cpp)

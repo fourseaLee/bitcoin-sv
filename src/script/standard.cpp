@@ -260,6 +260,23 @@ public:
         *script << OP_HASH160 << ToByteVector(scriptID) << OP_EQUAL;
         return true;
     }
+#ifdef ENABLE_VID
+    bool operator()(const WitnessUnknown &dest) const {
+        script->clear();
+        return false;
+    }
+
+    bool operator()(const WitnessV0KeyHash &witkh) const {
+        script->clear();
+        return false;
+    }
+
+    bool operator()(const WitnessV0ScriptHash &witpsh) const {
+        script->clear();
+        return false;
+    }
+
+#endif
 };
 } // namespace
 

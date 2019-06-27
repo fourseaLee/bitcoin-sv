@@ -60,6 +60,46 @@ struct DefaultBlockSizeParams {
  */
 class CChainParams {
 public:
+   #ifdef ENABLE_VID
+    enum Base58Type {
+        PUBKEY_ADDRESS,
+        SCRIPT_ADDRESS,
+        SECRET_KEY,
+        EXT_PUBLIC_KEY,
+        EXT_SECRET_KEY,
+
+        ZCPAYMENT_ADDRRESS,
+        ZCSPENDING_KEY,
+        ZCVIEWING_KEY,
+
+        MAX_BASE58_TYPES
+    };
+
+    enum Bech32Type {
+        SAPLING_PAYMENT_ADDRESS,
+        SAPLING_FULL_VIEWING_KEY,
+        SAPLING_INCOMING_VIEWING_KEY,
+        SAPLING_EXTENDED_SPEND_KEY,
+
+        WITNESS_KEY,
+
+        MAX_BECH32_TYPES
+    };
+    
+    const std::vector<unsigned char>& Base58BTCPrefix(Base58Type type) const
+    {
+        return base58BTCPrefixes[type];
+    }
+    const std::string& Bech32HRP(Bech32Type type) const
+    {
+        return bech32HRPs[type];
+    }
+private:
+    std::vector<unsigned char> base58BTCPrefixes[MAX_BASE58_TYPES];
+    std::string bech32HRPs[MAX_BECH32_TYPES];
+
+public:
+#else
     enum Base58Type {
         PUBKEY_ADDRESS,
         SCRIPT_ADDRESS,
@@ -69,6 +109,8 @@ public:
 
         MAX_BASE58_TYPES
     };
+#endif
+
 
     const Consensus::Params &GetConsensus() const { return consensus; }
     const CMessageHeader::MessageMagic &DiskMagic() const { return diskMagic; }
